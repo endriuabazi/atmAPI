@@ -82,88 +82,88 @@ namespace atmAPI.Controllers
 
 
         //put method
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
 
 
-        public async Task<IActionResult> PutTransaction(int id, transaction transaction)
-        {
+        //public async Task<IActionResult> PutTransaction(int id, transaction transaction)
+        //{
 
-            if (id != transaction.transaction_id)
-            {
+        //    if (id != transaction.transaction_id)
+        //    {
 
-                return BadRequest();
+        //        return BadRequest();
 
-            }
-
-
-
-            _dbContext.Entry(transaction).State = EntityState.Modified;
-
-
-            try
-            {
-
-                await _dbContext.SaveChangesAsync();
-
-
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-
-
-                if (!transactionExist(id))
-                {
-
-
-                    return NotFound();
-
-                }
-
-                else
-                {
-                    throw;
-
-                }
-
-            }
+        //    }
 
 
 
-            return NoContent();
+        //    _dbContext.Entry(transaction).State = EntityState.Modified;
 
-        }
-        private bool transactionExist(long id)
-        {
 
-            return (_dbContext.transactions?.Any(e => e.transaction_id == id)).GetValueOrDefault();
-        }
+        //    try
+        //    {
+
+        //        await _dbContext.SaveChangesAsync();
+
+
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+
+
+        //        if (!transactionExist(id))
+        //        {
+
+
+        //            return NotFound();
+
+        //        }
+
+        //        else
+        //        {
+        //            throw;
+
+        //        }
+
+        //    }
+
+
+
+        //    return NoContent();
+
+        //}
+        //private bool transactionExist(long id)
+        //{
+
+        //    return (_dbContext.transactions?.Any(e => e.transaction_id == id)).GetValueOrDefault();
+        //}
         
 
 
 
         ////Delete  method
 
-        [HttpDelete("{id}")]
+        //[HttpDelete("{id}")]
 
-        public string Delete(int id)
-        {
+        //public string Delete(int id)
+        //{
 
-            // get account me ket id
-            var foundTransaction = _dbContext.transactions.FirstOrDefault(x => x.transaction_id == id);
+        //    // get account me ket id
+        //    var foundTransaction = _dbContext.transactions.FirstOrDefault(x => x.transaction_id == id);
 
-            if (foundTransaction is null) return "No transaction found with this id!";
+        //    if (foundTransaction is null) return "No transaction found with this id!";
 
-            _dbContext.transactions.Remove(foundTransaction);
+        //    _dbContext.transactions.Remove(foundTransaction);
 
-            bool isDeleted = _dbContext.SaveChanges() > 0;
-            if (isDeleted)
-            {
+        //    bool isDeleted = _dbContext.SaveChanges() > 0;
+        //    if (isDeleted)
+        //    {
 
-                return "Transaction deleted successfully";
-            }
+        //        return "Transaction deleted successfully";
+        //    }
 
-            return "Error";
-        }
+        //    return "Error";
+        //}
 
 
 

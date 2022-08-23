@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace atmAPI.Models
 {
     public class client
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int client_id { get; set; }
         public string username { get; set; }
         public string client_name { get; set; }

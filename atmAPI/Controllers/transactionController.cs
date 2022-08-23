@@ -69,6 +69,8 @@ namespace atmAPI.Controllers
 
         public async Task<ActionResult<transaction>> PostTransaction(transaction transaction)
         {
+            
+
             _dbContext.transactions.Add(transaction);
 
             await _dbContext.SaveChangesAsync();
@@ -78,7 +80,34 @@ namespace atmAPI.Controllers
         }
 
 
-     
+
+
+        //[HttpPost]
+
+
+        //public async Task<ActionResult<transaction>> createTrans(string type , int amount, account account)
+        //{
+
+        //    transaction transaction = new transaction();
+        //    transaction.amount = amount;
+        //    transaction.transaction_type = type;
+        //    transaction.transaction_date= DateTime.Now;
+        //    transaction.account = account;
+
+
+
+
+        //    _dbContext.transactions.Add(transaction);
+
+        //    await _dbContext.SaveChangesAsync();
+
+
+        //    return CreatedAtAction(nameof(GetTransactions), new { id = transaction.transaction_id }, transaction);
+        //}
+
+
+
+
 
 
         //put method
@@ -137,33 +166,33 @@ namespace atmAPI.Controllers
 
         //    return (_dbContext.transactions?.Any(e => e.transaction_id == id)).GetValueOrDefault();
         //}
-        
 
 
 
-        ////Delete  method
 
-        //[HttpDelete("{id}")]
+        //Delete  method
 
-        //public string Delete(int id)
-        //{
+        [HttpDelete("{id}")]
 
-        //    // get account me ket id
-        //    var foundTransaction = _dbContext.transactions.FirstOrDefault(x => x.transaction_id == id);
+        public string Delete(int id)
+        {
 
-        //    if (foundTransaction is null) return "No transaction found with this id!";
+            // get account me ket id
+            var foundTransaction = _dbContext.transactions.FirstOrDefault(x => x.transaction_id == id);
 
-        //    _dbContext.transactions.Remove(foundTransaction);
+            if (foundTransaction is null) return "No transaction found with this id!";
 
-        //    bool isDeleted = _dbContext.SaveChanges() > 0;
-        //    if (isDeleted)
-        //    {
+            _dbContext.transactions.Remove(foundTransaction);
 
-        //        return "Transaction deleted successfully";
-        //    }
+            bool isDeleted = _dbContext.SaveChanges() > 0;
+            if (isDeleted)
+            {
 
-        //    return "Error";
-        //}
+                return "Transaction deleted successfully";
+            }
+
+            return "Error";
+        }
 
 
 

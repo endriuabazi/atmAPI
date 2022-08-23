@@ -32,7 +32,7 @@ namespace atmAPI.Controllers
             return accounts;
         }
 
-        //get method by Id
+        //get account by Id
         [HttpGet("{id}")]
         public async Task<ActionResult<account>> Show(int id)
         {
@@ -68,18 +68,18 @@ namespace atmAPI.Controllers
         }
 
         //post method
-        [HttpPost]
-    
-
-        public async Task<ActionResult<account>> PostAccounts(account account)
-        {
-            _dbContext.accounts.Add(account);
-
-            await _dbContext.SaveChangesAsync();
+        //[HttpPost]
 
 
-            return CreatedAtAction(nameof(GetAccounts), new { id = account.account_id }, account);
-        }
+        //public async Task<ActionResult<account>> PostAccounts(account account)
+        //{
+        //    _dbContext.accounts.Add(account);
+
+        //    await _dbContext.SaveChangesAsync();
+
+
+        //    return CreatedAtAction(nameof(GetAccounts), new { id = account.account_id }, account);
+        //}
 
         //put method
 
@@ -142,14 +142,22 @@ namespace atmAPI.Controllers
 
         //withdraw
 
+
+
+
+
+
+
+   
         [HttpPut()]
         [Route("withdraw")]
 
         public async Task<IActionResult> Withdraw(int id, int amount)
         {
-
+           
             var dbUser = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
-
+    
+           
             if (dbUser == null)
             {
 
@@ -164,14 +172,34 @@ namespace atmAPI.Controllers
 
             }
 
+            
+            transaction transaction = new transaction();
+            transaction.amount = amount;
+            transaction.transaction_type = "Withdraw";
+            transaction.account = dbUser;
 
-            dbUser.balance= dbUser.balance - amount;
+
+            _dbContext.transactions.Add(transaction);
+
+            dbUser.balance = dbUser.balance - amount;
+
 
             await _dbContext.SaveChangesAsync();
 
             return Ok("Withdraw Successful!");
 
         }
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPut()]
         [Route("deposit")]
@@ -187,6 +215,14 @@ namespace atmAPI.Controllers
                 return BadRequest();
 
             }
+
+            transaction transaction = new transaction();
+            transaction.amount = amount;
+            transaction.transaction_type = "Deposit";
+            transaction.account = dbUser;
+
+
+            _dbContext.transactions.Add(transaction);
 
             dbUser.balance = dbUser.balance + amount;
 

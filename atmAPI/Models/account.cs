@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace atmAPI.Models
 {
-    public class account
+    public class Account
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -11,9 +11,9 @@ namespace atmAPI.Models
         public string account_name { get; set; }
         public int balance { get; set; }
         public char currency { get; set; }
-        public client client { get; set; }
+        public Client client { get; set; }
 
-        public ICollection<transaction> transactions { get; set; }
+        public ICollection<Transaction> transactions { get; set; }
 
     }
 }

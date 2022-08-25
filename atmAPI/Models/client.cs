@@ -1,12 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Mail;
 
 namespace atmAPI.Models
 {
-    public class client
+    public class Client
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       
         public int client_id { get; set; }
         public string username { get; set; }
         public string client_name { get; set; }
@@ -16,6 +19,6 @@ namespace atmAPI.Models
         public string email { get; set; }
         public string address { get; set; }
         public int age { get; set; }
-        public ICollection<account> accounts { get; set; }
+        public ICollection<Account> accounts { get; set; }
     }
 }

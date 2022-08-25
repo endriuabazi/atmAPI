@@ -19,9 +19,9 @@ namespace atmAPI.Data
 
 
 
-        public DbSet<account> accounts { get; set; }
-        public DbSet<client> clients { get; set; }
-        public DbSet<transaction> transactions { get; set; }
+        public DbSet<Account> accounts { get; set; }
+        public DbSet<Client> clients { get; set; }
+        public DbSet<Transaction> transactions { get; set; }
 
     }
 }

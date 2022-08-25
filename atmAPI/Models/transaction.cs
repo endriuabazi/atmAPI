@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace atmAPI.Models
 {
-    public class transaction
+    public class Transaction
     {
 
         [Key]
@@ -17,7 +17,7 @@ namespace atmAPI.Models
         public int amount { get; set; }
       
 
-        public account account { get; set; }
+        public Account account { get; set; }
 
 
 

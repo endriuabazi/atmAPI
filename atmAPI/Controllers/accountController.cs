@@ -24,7 +24,7 @@ namespace atmAPI.Controllers
         //get method
         [HttpGet]
 
-        public List<account> GetAccounts() {
+        public List<Account> GetAccounts() {
 
             var accounts = _dbContext.accounts.ToList();
 
@@ -34,28 +34,22 @@ namespace atmAPI.Controllers
 
         //get account by Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<account>> Show(int id)
+        public async Task<ActionResult<Account>> Show(int id)
         {
 
 
-            if (_dbContext.accounts == null)
-            {
+            var account = await _dbContext.accounts.FindAsync(id);
 
-                return NotFound();
-            }
-
-            var accounts = await _dbContext.accounts.FindAsync(id);
-
-            if (accounts == null) return NotFound();
+            if (account == null) return NotFound();
 
 
-            return accounts;
+            return account;
         }
 
 
         [HttpGet]
         [Route("GetTransFromAcc")]
-        public async Task<ActionResult<client>> GetTransFromAcc(int id)
+        public async Task<ActionResult<Client>> GetTransFromAcc(int id)
         {
 
             var dbUser = _dbContext.accounts.Where(x => x.account_id == id).SelectMany(y => y.transactions);
@@ -155,17 +149,17 @@ namespace atmAPI.Controllers
         public async Task<IActionResult> Withdraw(int id, int amount)
         {
            
-            var dbUser = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
+            var account = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
     
            
-            if (dbUser == null)
+            if (account == null)
             {
 
                 return BadRequest();
 
             }
 
-            if (dbUser.balance == null || amount >dbUser.balance)
+            if (account.balance == null || amount > account.balance)
             {
 
                 return BadRequest();
@@ -173,15 +167,15 @@ namespace atmAPI.Controllers
             }
 
             
-            transaction transaction = new transaction();
+            Transaction transaction = new Transaction();
             transaction.amount = amount;
             transaction.transaction_type = "Withdraw";
-            transaction.account = dbUser;
+            transaction.account = account;
 
 
             _dbContext.transactions.Add(transaction);
 
-            dbUser.balance = dbUser.balance - amount;
+            account.balance = account.balance - amount;
 
 
             await _dbContext.SaveChangesAsync();
@@ -192,39 +186,30 @@ namespace atmAPI.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
         [HttpPut()]
         [Route("deposit")]
 
         public async Task<IActionResult> Deposit(int id, int amount)
         {
 
-            var dbUser = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
+            var account = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
 
-            if (dbUser == null)
+            if (account == null)
             {
 
                 return BadRequest();
 
             }
 
-            transaction transaction = new transaction();
+            Transaction transaction = new Transaction();
             transaction.amount = amount;
             transaction.transaction_type = "Deposit";
-            transaction.account = dbUser;
+            transaction.account = account;
 
 
             _dbContext.transactions.Add(transaction);
 
-            dbUser.balance = dbUser.balance + amount;
+            account.balance = account.balance + amount;
 
             await _dbContext.SaveChangesAsync();
 
@@ -276,6 +261,7 @@ namespace atmAPI.Controllers
 
         //    return "Error";
         //}
+
 
 
 

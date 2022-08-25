@@ -23,7 +23,7 @@ namespace atmAPI.Controllers
         //get method
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<client>>> GetClients()
+        public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
             if (_dbContext.clients == null)
             {
@@ -35,24 +35,25 @@ namespace atmAPI.Controllers
 
         }
 
-        //get method by Id
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<client>> ShowClient(int id)
+
+
+
+        //[HttpGet]
+        //[Route("getClientsbyUsername")]
+        //public async Task<ActionResult<Client>> getClientsbyUsername(string username)
+
         //{
 
+        //    var clientWiththisID = _dbContext.clients.Where(x => x.username == username);
 
-        //    if (_dbContext.clients == null)
+        //    if (clientWiththisID == null)
         //    {
 
         //        return NotFound();
         //    }
 
-        //    var clients = await _dbContext.clients.FindAsync(id);
+        //    return Ok(clientWiththisID);
 
-        //    if (clients == null) return NotFound();
-
-
-        //    return clients;
         //}
 
 
@@ -60,7 +61,7 @@ namespace atmAPI.Controllers
         // get accounts from clients
         [HttpGet]
         [Route("GetAccountsFromClients")]
-        public async Task<ActionResult<client>> GiveAccounts(string username)
+        public async Task<ActionResult<Client>> GiveAccounts(string username)
         {
 
             var dbUser = _dbContext.clients.Where(x=>x.username == username).SelectMany(y=>y.accounts);
@@ -116,7 +117,7 @@ namespace atmAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<client>> LoginClients(int pin,string username)
+        public async Task<ActionResult<Client>> LoginClients(int pin,string username)
         {   
             var dbUser = _dbContext.clients.Where(x => x.pin == pin && x.username == username).FirstOrDefault();
 
@@ -133,11 +134,11 @@ namespace atmAPI.Controllers
         public async Task<IActionResult> changePin(string username,int pin1, int pin2)
         {
 
-            var dbUser = _dbContext.clients.Where(x => x.username == username).FirstOrDefault();
+            var clientExist = _dbContext.clients.Where(x => x.username == username).FirstOrDefault();
 
-            if (dbUser != null && pin1 == pin2 )
+            if (clientExist != null && pin1 == pin2 )
             {
-                dbUser.pin = pin1;
+                clientExist.pin = pin1;
 
                 await _dbContext.SaveChangesAsync();
 
@@ -159,17 +160,21 @@ namespace atmAPI.Controllers
         [HttpPut()]
         [Route("editProfile")]
 
-        public async Task<IActionResult> editProfile(string username, string newusername , string address, string phone, string email)
+        public async Task<IActionResult> editProfile(string oldUsername, string username , string address, string phone, string email)
         {
 
-            var dbUser = _dbContext.clients.Where(x => x.username == username).FirstOrDefault();
+            var clientExist = _dbContext.clients.Where(x => x.username == oldUsername).FirstOrDefault();
 
-            if (dbUser != null)
+            if (clientExist != null)
             {
-                dbUser.username = newusername;
-                dbUser.address = address;
-                dbUser.client_phone = phone;
-                dbUser.email = email;
+
+
+
+                clientExist.username = username;
+                clientExist.address = address;
+                clientExist.client_phone = phone;
+                clientExist.email = email;
+
 
 
                 await _dbContext.SaveChangesAsync();

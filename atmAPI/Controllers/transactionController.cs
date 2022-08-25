@@ -23,7 +23,7 @@ namespace atmAPI.Controllers
         //get method
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<transaction>>> GetTransactions()
+        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
             if (_dbContext.transactions == null)
             {
@@ -38,7 +38,7 @@ namespace atmAPI.Controllers
         //get method by Id
         [HttpGet("{id}")]
         
-        public async Task<ActionResult<transaction>> Show(int id)
+        public async Task<ActionResult<Transaction>> Show(int id)
         {
 
 
@@ -67,7 +67,7 @@ namespace atmAPI.Controllers
         [HttpPost]
        
 
-        public async Task<ActionResult<transaction>> PostTransaction(transaction transaction)
+        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
         {
             
 

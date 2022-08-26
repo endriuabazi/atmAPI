@@ -266,7 +266,56 @@ namespace atmAPI.Controllers
 
 
 
+        [HttpPut()]
+        [Route("send")]
 
+        public async Task<IActionResult> Send(int id, int amount, string account_name)
+        {
+            var existSendAccount = _dbContext.accounts.Where(x => x.account_name == account_name).FirstOrDefault();
+            //var sendaccount = _dbContext.accounts.Where(x => x.account_name == account_name).Select(x => x.balance);
+            var account = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
+
+            if (account == null)
+            {
+
+                return BadRequest();
+
+            }
+
+            Transaction transaction = new Transaction();
+            transaction.amount = amount;
+            transaction.transaction_type = "Send";
+            transaction.account = account;
+
+
+            _dbContext.transactions.Add(transaction);
+
+            account.balance = account.balance - amount;
+
+            if (existSendAccount.currency != account.currency) {
+
+                if (existSendAccount.currency == '$')
+
+                    amount = amount * 2;
+                else if (existSendAccount.currency == '€') {
+
+                    amount = amount /2;
+                    
+                }
+
+            }
+        existSendAccount.balance = existSendAccount.balance + amount;
+
+            if (existSendAccount == null)
+            {
+                return NotFound();
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok("Deposit Successful!");
+
+        }
 
 
 

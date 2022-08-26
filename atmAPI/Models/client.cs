@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Mail;
@@ -11,6 +12,7 @@ namespace atmAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
        
         public int client_id { get; set; }
+     
         public string username { get; set; }
         public string client_name { get; set; }
         public string client_surname { get; set; }

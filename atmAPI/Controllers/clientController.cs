@@ -128,7 +128,7 @@ namespace atmAPI.Controllers
 
         }
 
-        [HttpPut()]
+        [HttpPut]
         [Route("changePin")]
 
         public async Task<IActionResult> changePin(string username,int pin1, int pin2)
@@ -164,6 +164,41 @@ namespace atmAPI.Controllers
         {
 
             var clientExist = _dbContext.clients.Where(x => x.username == oldUsername).FirstOrDefault();
+
+            if (clientExist != null)
+            {
+
+
+
+                clientExist.username = username;
+                clientExist.address = address;
+                clientExist.client_phone = phone;
+                clientExist.email = email;
+
+
+
+                await _dbContext.SaveChangesAsync();
+
+                return Ok("Profile edited success!");
+
+
+
+            }
+
+
+
+            return BadRequest();
+
+        }
+
+
+        [HttpPut()]
+        [Route("editProfilewithID")]
+
+        public async Task<IActionResult> editProfilewithID(int id, string username, string address, string phone, string email)
+        {
+
+            var clientExist = _dbContext.clients.Where(x => x.client_id == id).FirstOrDefault();
 
             if (clientExist != null)
             {

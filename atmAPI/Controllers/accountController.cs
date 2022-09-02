@@ -159,7 +159,7 @@ namespace atmAPI.Controllers
 
             }
 
-            if (account.balance == null || amount > account.balance)
+            if (account.balance == null || amount > account.balance || amount == 0)
             {
 
                 return BadRequest();
@@ -194,7 +194,7 @@ namespace atmAPI.Controllers
 
             var account = _dbContext.accounts.Where(x => x.account_id == id).FirstOrDefault();
 
-            if (account == null)
+            if (account == null || amount == 0 || amount == null)
             {
 
                 return BadRequest();
@@ -260,7 +260,7 @@ namespace atmAPI.Controllers
         //    }
 
         //    return "Error";
-        //}
+        //} 
 
 
 
@@ -290,21 +290,35 @@ namespace atmAPI.Controllers
 
             _dbContext.transactions.Add(transaction);
 
+            if (account.balance == null || amount > account.balance  || account.account_name == account_name  || amount == 0)
+            {
+
+                return BadRequest();
+
+            }
+
             account.balance = account.balance - amount;
 
             if (existSendAccount.currency != account.currency) {
 
                 if (existSendAccount.currency == '$')
 
-                    amount = amount * 2;
+                    amount = amount * 1;
                 else if (existSendAccount.currency == '€') {
 
-                    amount = amount /2;
+                    amount = amount /1;
                     
                 }
 
             }
-        existSendAccount.balance = existSendAccount.balance + amount;
+
+            Transaction Recievetransaction = new Transaction();
+            Recievetransaction.amount = amount;
+            Recievetransaction.transaction_type = "Recieved";
+            Recievetransaction.account = existSendAccount;
+            _dbContext.transactions.Add(Recievetransaction);
+
+            existSendAccount.balance = existSendAccount.balance + amount;
 
             if (existSendAccount == null)
             {

@@ -37,6 +37,23 @@ namespace atmAPI.Controllers
 
 
 
+        [HttpGet]
+        [Route("GetClientByUsername")]
+        public async Task<ActionResult<IEnumerable<Client>>> GetClientbyUsername(string username)
+        {
+
+            var clientExist = _dbContext.clients.Where(x => x.username == username);
+
+            if (clientExist == null) {
+                return NotFound("Client not found!");
+            
+            }
+            return Ok(clientExist);
+
+        }
+
+
+
 
         //[HttpGet]
         //[Route("getClientsbyUsername")]
@@ -122,8 +139,20 @@ namespace atmAPI.Controllers
             var dbUser = _dbContext.clients.Where(x => x.pin == pin && x.username == username).FirstOrDefault();
 
             if (dbUser == null) { return BadRequest(); }
+            
+            if (dbUser.pin != pin) {
 
-            return Ok("Lezzgooo!");
+                return NotFound("Incorrect Pin");
+            
+            }
+            else if (dbUser.username != username)
+            {
+
+                return NotFound("Incorrect Username");
+
+            }
+
+            return Ok("Login succesfull!");
            
 
         }
@@ -131,10 +160,10 @@ namespace atmAPI.Controllers
         [HttpPut]
         [Route("changePin")]
 
-        public async Task<IActionResult> changePin(string username,int pin1, int pin2)
+        public async Task<IActionResult> changePin(int id,int pin1, int pin2)
         {
 
-            var clientExist = _dbContext.clients.Where(x => x.username == username).FirstOrDefault();
+            var clientExist = _dbContext.clients.Where(x => x.client_id == id).FirstOrDefault();
 
             if (clientExist != null && pin1 == pin2 )
             {
@@ -146,6 +175,13 @@ namespace atmAPI.Controllers
 
                
 
+            }
+
+            if (clientExist.pin == pin1 && pin1 == pin2) {
+
+
+                return BadRequest("This pin exist!");
+            
             }
 
          
@@ -160,14 +196,15 @@ namespace atmAPI.Controllers
         [HttpPut()]
         [Route("editProfile")]
 
-        public async Task<IActionResult> editProfile(string oldUsername, string username , string address, string phone, string email)
-        {
+        public async Task<IActionResult> editProfile(int id, string username , string address, string phone, string email)
+            {
 
-            var clientExist = _dbContext.clients.Where(x => x.username == oldUsername).FirstOrDefault();
+            var clientExist = _dbContext.clients.Where(x => x.client_id == id).FirstOrDefault();
+
 
             if (clientExist != null)
             {
-
+                
 
 
                 clientExist.username = username;
@@ -203,11 +240,18 @@ namespace atmAPI.Controllers
             if (clientExist != null)
             {
 
-
-
+                
                 clientExist.username = username;
+
+               
                 clientExist.address = address;
+             
+               
+
                 clientExist.client_phone = phone;
+               
+              
+               
                 clientExist.email = email;
 
 
@@ -219,7 +263,6 @@ namespace atmAPI.Controllers
 
 
             }
-
 
 
             return BadRequest();

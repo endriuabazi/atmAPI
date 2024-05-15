@@ -10,17 +10,35 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("localhost:19006").AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
-                      });
+        policy =>
+        {
+            policy.WithOrigins(
+                    "http://localhost:19006", 
+                    "exp://192.168.1.46:19000",
+                    "http://localhost:8081",
+                    "exp://192.168.1.46:8081"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials(); // This line allows credentials (like cookies, authorization headers) to be sent along with the request.
+        });
 });
+
+
+
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("apiPostgreCon")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
+
 
 var app = builder.Build();
 
@@ -30,7 +48,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

@@ -62,18 +62,35 @@ namespace atmAPI.Controllers
         }
 
         //post method
-        //[HttpPost]
+        [HttpPost]
+        public async Task<ActionResult<Account>> PostAccounts(string account_name, int balance, char currency, int client_id)
+        {
+            var clientExist = await _dbContext.clients.Include(x=>x.accounts).FirstOrDefaultAsync(x=>x.client_id == client_id);
+            if (clientExist == null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            if (clientExist.accounts == null)
+            {
+                clientExist.accounts = new List<Account>();
+            }
+
+            var account = new Account
+            {
+                account_name = account_name,
+                balance = balance,
+                currency = currency,
+            };
+
+             clientExist.accounts.Add(account);
+            _dbContext.accounts.Add(account);
+            await _dbContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetAccounts), new { id = account.account_id }, account);
+        }
 
 
-        //public async Task<ActionResult<account>> PostAccounts(account account)
-        //{
-        //    _dbContext.accounts.Add(account);
-
-        //    await _dbContext.SaveChangesAsync();
-
-
-        //    return CreatedAtAction(nameof(GetAccounts), new { id = account.account_id }, account);
-        //}
 
         //put method
 

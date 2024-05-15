@@ -2,12 +2,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Mail;
+
 
 namespace atmAPI.Models
 {
     public class Client
     {
+        public Client()
+        {
+            accounts = new List<Account>();
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
        

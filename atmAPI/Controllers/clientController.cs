@@ -110,23 +110,33 @@ namespace atmAPI.Controllers
 
 
 
+        [HttpPost]
+        public async Task<ActionResult<Client>> PostClients(string username, string client_name, string client_surname, string client_phone, int pin, string email, string address, int age)
+        {
+            var client = new Client
+            {
+                username = username,
+                client_name = client_name,
+                client_surname = client_surname,
+                client_phone = client_phone,
+                pin = pin,
+                email = email,
+                address = address,
+                age = age
+            };
+    
+            _dbContext.clients.Add(client);
+
+            await _dbContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetClients), new { id = client.client_id }, client);
+        }
+
 
 
 
 
         //post method
-        //[HttpPost]
-
-
-        //public async Task<ActionResult<client>> PostClients(client client)
-        //{
-        //    _dbContext.clients.Add(client);
-
-        //    await _dbContext.SaveChangesAsync();
-
-
-        //    return CreatedAtAction(nameof(GetClients), new { id = client.client_id }, client);
-        //}
 
 
         //login method
@@ -222,6 +232,21 @@ namespace atmAPI.Controllers
 
             }
 
+            if (id == 0)
+            {
+                var client  = new Client()
+                {
+                    username = username,
+                    address = address,
+                    client_phone = phone,
+                    email = email
+                };
+                    
+                _dbContext.clients.Add(client);
+                _dbContext.SaveChanges();
+                return Ok(client);
+
+            }
 
 
             return BadRequest();

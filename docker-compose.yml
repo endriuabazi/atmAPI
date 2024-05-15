@@ -1,0 +1,25 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: endriu1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  atmapi:
+    image: atmapi
+    build:
+      context: .
+      dockerfile: atmAPI/Dockerfile
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__apiPostgreCon=Host=db;Port=5432;Database=atm;Username=postgres;Password=endriu1234
+
+volumes:
+  db-data:

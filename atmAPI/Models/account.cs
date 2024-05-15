@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace atmAPI.Models
 {
@@ -11,6 +12,7 @@ namespace atmAPI.Models
         public string account_name { get; set; }
         public int balance { get; set; }
         public char currency { get; set; }
+        
         public Client client { get; set; }
 
         public ICollection<Transaction> transactions { get; set; }
